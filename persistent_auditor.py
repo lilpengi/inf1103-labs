@@ -23,6 +23,13 @@ def load_inventory():
     return orders
 
 
+def save_inventory(orders):
+    """Write every order back to the file, one per line."""
+    with open(ORDERS_FILE, "w") as f:
+        for order in orders:
+            f.write(f"{order['id']},{order['product']},{order['quantity']}\n")
+
+
 def print_current_orders(orders):
     print("Current Orders:")
     for order in orders:
@@ -80,6 +87,9 @@ def main():
 
         print("\nNew Order Added:")
         print(f"{new_id},{product},{quantity}\n")
+
+    save_inventory(orders)
+    print(f"Order successfully saved to {ORDERS_FILE}")
 
 
 if __name__ == "__main__":
