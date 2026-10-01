@@ -1,0 +1,3 @@
+1001,mouse,3
+1002,keyboard,45
+1003,feet pics,2
