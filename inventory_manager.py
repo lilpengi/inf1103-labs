@@ -91,7 +91,56 @@ def search_product(inventory):
     print(f"Stock: {product['stock']}")
     print("-" * 48)
 
+def save_inventory(inventory):
+    print("Saving inventory...")
+    try:
+        with open(INVENTORY_FILE, "w") as f:
+            json.dump(inventory, f, indent=4)
+        print(f"Inventory saved successfully to {INVENTORY_FILE}.")
+    except OSError as e:
+        print(f"Error saving inventory: {e}")
 
-# Temporary test, replaced in Part 3
-inventory = load_inventory()
-display_all(inventory)
+
+def print_menu():
+    print("\n----------- MENU -----------")
+    print("1. Display All Products")
+    print("2. Add Product")
+    print("3. Update Stock")
+    print("4. Search Product")
+    print("5. Save Inventory")
+    print("6. Exit")
+    print("----------------------------")
+
+
+def main():
+    print("=" * 40)
+    print("INVENTORY MANAGEMENT SYSTEM")
+    print("=" * 40)
+    inventory = load_inventory()
+
+    while True:
+        print_menu()
+        choice = input("Enter option: ").strip()
+
+        if choice == "1":
+            display_all(inventory)
+        elif choice == "2":
+            add_product(inventory)
+        elif choice == "3":
+            update_stock(inventory)
+        elif choice == "4":
+            search_product(inventory)
+        elif choice == "5":
+            save_inventory(inventory)
+        elif choice == "6":
+            print("Saving inventory before exit...")
+            save_inventory(inventory)
+            print("Thank you for using Inventory Management System.")
+            print("Program terminated.")
+            break
+        else:
+            print("Invalid option. Please enter a number from 1 to 6.")
+
+
+if __name__ == "__main__":
+    main()
