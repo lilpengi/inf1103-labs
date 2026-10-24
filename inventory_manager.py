@@ -30,16 +30,23 @@ def load_inventory():
             print("Inventory loaded successfully.")
 
         except (json.JSONDecodeError, OSError):
-            print("Could not read inventory.json. Starting with an empty inventory.")
+            print(
+                "Could not read inventory.json. "
+                "Starting with an empty inventory."
+            )
 
     else:
-        print("inventory.json not found. Starting with an empty inventory.")
+        print(
+            "inventory.json not found. "
+            "Starting with an empty inventory."
+        )
 
     return inventory
 
 
 def add_product(inventory):
     print("\nAdd New Product")
+
     product_id = input("Product ID: ").strip()
 
     if inventory.search_product(product_id):
@@ -63,8 +70,8 @@ def add_product(inventory):
 
 def update_stock(inventory):
     print("\nUpdate Stock")
-    product_id = input("Enter Product ID: ").strip()
 
+    product_id = input("Enter Product ID: ").strip()
     product = inventory.search_product(product_id)
 
     if product is None:
@@ -82,13 +89,14 @@ def update_stock(inventory):
         return
 
     product.update_stock(new_stock)
+
     print("Stock updated successfully!")
 
 
 def search_product(inventory):
     print("\nSearch Product")
-    product_id = input("Enter Product ID: ").strip()
 
+    product_id = input("Enter Product ID: ").strip()
     product = inventory.search_product(product_id)
 
     if product is None:
@@ -120,7 +128,10 @@ def save_inventory(inventory):
         with open(INVENTORY_FILE, "w") as f:
             json.dump(data, f, indent=4)
 
-        print(f"Inventory saved successfully to {INVENTORY_FILE}.")
+        print(
+            f"Inventory saved successfully to "
+            f"{INVENTORY_FILE}."
+        )
 
     except OSError as e:
         print(f"Error saving inventory: {e}")
@@ -166,12 +177,18 @@ def main():
         elif choice == "6":
             print("Saving inventory before exit...")
             save_inventory(inventory)
-            print("Thank you for using Inventory Management System.")
+            print(
+                "Thank you for using "
+                "Inventory Management System."
+            )
             print("Program terminated.")
             break
 
         else:
-            print("Invalid option. Please enter a number from 1 to 6.")
+            print(
+                "Invalid option. "
+                "Please enter a number from 1 to 6."
+            )
 
 
 if __name__ == "__main__":
