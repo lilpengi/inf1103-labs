@@ -22,3 +22,6 @@ class Inventory:
                 product.display_information()
 
         print("-" * 48)
+
+    def get_products(self):
+        return self.__products
