@@ -1,7 +1,7 @@
 import json
 import os
 
-from product import Product
+from product import Product, PhysicalProduct, DigitalProduct
 from inventory import Inventory
 
 INVENTORY_FILE = "inventory.json"
@@ -46,6 +46,14 @@ def load_inventory():
 
 def add_product(inventory):
     print("\nAdd New Product")
+    print("1. Physical Product")
+    print("2. Digital Product")
+
+    product_type = input("Select product type: ").strip()
+
+    if product_type not in ("1", "2"):
+        print("Invalid product type.")
+        return
 
     product_id = input("Product ID: ").strip()
 
@@ -62,11 +70,38 @@ def add_product(inventory):
         print("Invalid price or stock. Product not added.")
         return
 
-    product = Product(product_id, name, price, stock)
+    if product_type == "1":
+        try:
+            weight = float(input("Weight (kg): "))
+        except ValueError:
+            print("Invalid weight. Product not added.")
+            return
+
+        product = PhysicalProduct(
+            product_id,
+            name,
+            price,
+            stock,
+            weight
+        )
+
+    else:
+        try:
+            download_size = float(input("Download Size (MB): "))
+        except ValueError:
+            print("Invalid download size. Product not added.")
+            return
+
+        product = DigitalProduct(
+            product_id,
+            name,
+            price,
+            stock,
+            download_size
+        )
+
     inventory.add_product(product)
-
     print("Product added successfully!")
-
 
 def update_stock(inventory):
     print("\nUpdate Stock")
