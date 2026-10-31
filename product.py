@@ -36,7 +36,12 @@ class Product(ABC):
     def get_fulfilment_info(self):
         pass
 
-class PhysicalProduct(Product):
+class CanBeShipped(ABC):
+    @abstractmethod
+    def calculate_shipping_cost(self):
+        pass
+
+class PhysicalProduct(Product, CanBeShipped):
     def __init__(self, product_id, name, price, stock, weight):
         super().__init__(product_id, name, price, stock) #key line being used
         self.__weight = weight
@@ -50,8 +55,12 @@ class PhysicalProduct(Product):
         super().display_information() 
         print(f"Weight: {self.__weight} kg")
 
-    def get_fulfilment_info(self):
+    def get_fulfilment_info(self): 
         return "This product requires physical shipping."
+
+    #letting it be $2 per kg
+    def calculate_shipping_cost(self):
+        return self.__weight * 2
 
 class DigitalProduct(Product):
     def __init__(self, product_id, name, price, stock, download_size):
