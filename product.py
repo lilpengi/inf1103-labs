@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 #Product class is being used as a "blueprint" for all product types
-#but should not be something that is able to exist by itself.
+#but should not be something that is able to exist by itself. (abstract)
 class Product(ABC):
     def __init__(self, product_id, name, price, stock):
         self.__product_id = product_id
@@ -32,6 +32,8 @@ class Product(ABC):
             f"Stock: {self.__stock}"
         )
 
+    #this forces it to be unable to create a generic abstract class
+    #every real porduct must be something more specific e.g. PhysicalProduct or DigitalProduct
     @abstractmethod
     def get_fulfilment_info(self):
         pass
@@ -41,7 +43,10 @@ class CanBeShipped(ABC):
     def calculate_shipping_cost(self):
         pass
 
-class PhysicalProduct(Product, CanBeShipped):
+#with the first line, it helps to state that the phsyical product
+# 1. IS a product
+# 2. CAN be shipped
+class PhysicalProduct(Product, CanBeShipped): 
     def __init__(self, product_id, name, price, stock, weight):
         super().__init__(product_id, name, price, stock) #key line being used
         self.__weight = weight
