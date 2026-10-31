@@ -1,38 +1,18 @@
 [
     {
-        "id": "P001",
+        "id": "P100",
         "name": "Laptop",
         "price": 1200.0,
-        "stock": 20
+        "stock": 5,
+        "type": "physical",
+        "weight": 1.8
     },
     {
-        "id": "P002",
-        "name": "Mouse",
-        "price": 25.5,
-        "stock": 30
-    },
-    {
-        "id": "P003",
-        "name": "Keyboard",
-        "price": 45.0,
-        "stock": 25
-    },
-    {
-        "id": "P004",
-        "name": "Monitor",
-        "price": 299.99,
-        "stock": 10
-    },
-    {
-        "id": "P005",
-        "name": "Webcam",
-        "price": 59.9,
-        "stock": 20
-    },
-    {
-        "id": "p006",
-        "name": "Headphones",
-        "price": 79.9,
-        "stock": 12
+        "id": "D100",
+        "name": "Windows",
+        "price": 199.0,
+        "stock": 50,
+        "type": "digital",
+        "download_size": 6500.0
     }
 ]

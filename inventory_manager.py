@@ -1,11 +1,10 @@
 import json
 import os
 
-from product import Product, PhysicalProduct, DigitalProduct
+from product import PhysicalProduct, DigitalProduct
 from inventory import Inventory
 
 INVENTORY_FILE = "inventory.json"
-
 
 def load_inventory():
     inventory = Inventory()
@@ -18,18 +17,32 @@ def load_inventory():
                 data = json.load(f)
 
             for item in data:
-                product = Product(
-                    item["id"],
-                    item["name"],
-                    item["price"],
-                    item["stock"]
-                )
+                if item["type"] == "physical":
+                    product = PhysicalProduct(
+                        item["id"],
+                        item["name"],
+                        item["price"],
+                        item["stock"],
+                        item["weight"]
+                    )
+
+                elif item["type"] == "digital":
+                    product = DigitalProduct(
+                        item["id"],
+                        item["name"],
+                        item["price"],
+                        item["stock"],
+                        item["download_size"]
+                    )
+
+                else:
+                    continue
 
                 inventory.add_product(product)
 
             print("Inventory loaded successfully.")
 
-        except (json.JSONDecodeError, OSError):
+        except (json.JSONDecodeError, OSError, KeyError):
             print(
                 "Could not read inventory.json. "
                 "Starting with an empty inventory."
@@ -42,7 +55,6 @@ def load_inventory():
         )
 
     return inventory
-
 
 def add_product(inventory):
     print("\nAdd New Product")
@@ -157,6 +169,17 @@ def save_inventory(inventory):
             "stock": product.get_stock()
         }
 
+        #reminder: rmb how isinstance() takes two things | isinstance(object, class) 
+        #product is the object we are checking while 
+        # PhysicalProduct is the class we are askin if the object belongs to
+        if isinstance(product, PhysicalProduct):
+            product_data["type"] = "physical" 
+            product_data["weight"] = product.get_weight()
+
+        elif isinstance(product, DigitalProduct):
+            product_data["type"] = "digital"
+            product_data["download_size"] = product.get_download_size()
+
         data.append(product_data)
 
     try:
@@ -170,7 +193,6 @@ def save_inventory(inventory):
 
     except OSError as e:
         print(f"Error saving inventory: {e}")
-
 
 def print_menu():
     print("\n----------- MENU -----------")
