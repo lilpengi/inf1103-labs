@@ -1,13 +1,17 @@
+
 import json
 import os
 
 from product import PhysicalProduct, DigitalProduct
 from inventory import Inventory
+from supplier import Supplier
 
 INVENTORY_FILE = "inventory.json"
 
+
 def load_inventory():
     inventory = Inventory()
+    suppliers = {}
 
     if os.path.exists(INVENTORY_FILE):
         print("inventory.json found.")
@@ -17,13 +21,35 @@ def load_inventory():
                 data = json.load(f)
 
             for item in data:
+                supplier_data = item.get("supplier")
+
+                # Older saved products may not have supplier information.
+                if supplier_data is None:
+                    supplier_data = {
+                        "id": "LEGACY",
+                        "name": "Unknown supplier",
+                        "email": ""
+                    }
+
+                supplier_id = supplier_data["id"]
+
+                if supplier_id not in suppliers:
+                    suppliers[supplier_id] = Supplier(
+                        supplier_id,
+                        supplier_data["name"],
+                        supplier_data["email"]
+                    )
+
+                supplier = suppliers[supplier_id]
+
                 if item["type"] == "physical":
                     product = PhysicalProduct(
                         item["id"],
                         item["name"],
                         item["price"],
                         item["stock"],
-                        item["weight"]
+                        item["weight"],
+                        supplier
                     )
 
                 elif item["type"] == "digital":
@@ -32,7 +58,8 @@ def load_inventory():
                         item["name"],
                         item["price"],
                         item["stock"],
-                        item["download_size"]
+                        item["download_size"],
+                        supplier
                     )
 
                 else:
@@ -42,7 +69,7 @@ def load_inventory():
 
             print("Inventory loaded successfully.")
 
-        except (json.JSONDecodeError, OSError, KeyError):
+        except (json.JSONDecodeError, OSError, KeyError, TypeError):
             print(
                 "Could not read inventory.json. "
                 "Starting with an empty inventory."
@@ -55,6 +82,7 @@ def load_inventory():
         )
 
     return inventory
+
 
 def add_product(inventory):
     print("\nAdd New Product")
@@ -82,6 +110,32 @@ def add_product(inventory):
         print("Invalid price or stock. Product not added.")
         return
 
+    supplier_id = input("Supplier ID: ").strip()
+
+    if not supplier_id:
+        print("Supplier ID is required.")
+        return
+
+    # Reuse the supplier if another product already references it.
+    supplier = next(
+        (
+            product.supplier
+            for product in inventory.get_products()
+            if product.supplier.supplier_id == supplier_id
+        ),
+        None
+    )
+
+    if supplier is None:
+        supplier_name = input("Supplier Name: ").strip()
+        supplier_email = input("Supplier Email: ").strip()
+
+        supplier = Supplier(
+            supplier_id,
+            supplier_name,
+            supplier_email
+        )
+
     if product_type == "1":
         try:
             weight = float(input("Weight (kg): "))
@@ -94,7 +148,8 @@ def add_product(inventory):
             name,
             price,
             stock,
-            weight
+            weight,
+            supplier
         )
 
     else:
@@ -109,11 +164,13 @@ def add_product(inventory):
             name,
             price,
             stock,
-            download_size
+            download_size,
+            supplier
         )
 
     inventory.add_product(product)
     print("Product added successfully!")
+
 
 def update_stock(inventory):
     print("\nUpdate Stock")
@@ -166,14 +223,16 @@ def save_inventory(inventory):
             "id": product.get_product_id(),
             "name": product.get_name(),
             "price": product.get_price(),
-            "stock": product.get_stock()
+            "stock": product.get_stock(),
+            "supplier": {
+                "id": product.supplier.supplier_id,
+                "name": product.supplier.name,
+                "email": product.supplier.contact_email
+            }
         }
 
-        #reminder: rmb how isinstance() takes two things | isinstance(object, class) 
-        #product is the object we are checking while 
-        # PhysicalProduct is the class we are askin if the object belongs to
         if isinstance(product, PhysicalProduct):
-            product_data["type"] = "physical" 
+            product_data["type"] = "physical"
             product_data["weight"] = product.get_weight()
 
         elif isinstance(product, DigitalProduct):
@@ -193,6 +252,7 @@ def save_inventory(inventory):
 
     except OSError as e:
         print(f"Error saving inventory: {e}")
+
 
 def print_menu():
     print("\n----------- MENU -----------")
