@@ -1,13 +1,15 @@
 from abc import ABC, abstractmethod
+from supplier import Supplier
 
 #Product class is being used as a "blueprint" for all product types
 #but should not be something that is able to exist by itself. (abstract)
 class Product(ABC):
-    def __init__(self, product_id, name, price, stock):
+    def __init__(self, product_id, name, price, stock, supplier: Supplier):
         self.__product_id = product_id
         self.__name = name
         self.__price = price
         self.__stock = stock
+        self.supplier: Supplier = supplier
 
     def get_product_id(self):
         return self.__product_id
@@ -47,8 +49,8 @@ class CanBeShipped(ABC):
 # 1. IS a product
 # 2. CAN be shipped
 class PhysicalProduct(Product, CanBeShipped): 
-    def __init__(self, product_id, name, price, stock, weight):
-        super().__init__(product_id, name, price, stock) #key line being used
+    def __init__(self, product_id, name, price, stock, weight, supplier: Supplier):
+        super().__init__(product_id, name, price, stock, supplier) #key line being used
         self.__weight = weight
 
     def get_weight(self):
@@ -68,8 +70,8 @@ class PhysicalProduct(Product, CanBeShipped):
         return self.__weight * 2
 
 class DigitalProduct(Product):
-    def __init__(self, product_id, name, price, stock, download_size):
-        super().__init__(product_id, name, price, stock)
+    def __init__(self, product_id, name, price, stock, download_size, supplier: Supplier):
+        super().__init__(product_id, name, price, stock, supplier)
         self.__download_size = download_size
 
     def get_download_size(self):
