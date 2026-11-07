@@ -10,6 +10,7 @@ INVENTORY_FILE = "inventory.json"
 
 
 def load_inventory():
+    #creating an inventory object with an empty list to store Product objects
     inventory = Inventory()
     suppliers = {}
 

@@ -4,6 +4,11 @@
         "name": "Laptop",
         "price": 1200.0,
         "stock": 5,
+        "supplier": {
+            "id": "LEGACY",
+            "name": "Unknown supplier",
+            "email": ""
+        },
         "type": "physical",
         "weight": 1.8
     },
@@ -12,6 +17,11 @@
         "name": "Windows",
         "price": 199.0,
         "stock": 50,
+        "supplier": {
+            "id": "LEGACY",
+            "name": "Unknown supplier",
+            "email": ""
+        },
         "type": "digital",
         "download_size": 6500.0
     }
